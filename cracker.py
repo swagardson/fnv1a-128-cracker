@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import sys
 from shutil import copyfile
@@ -51,23 +53,26 @@ def write_data_to_file(data, **kwargs):
     Write matches to file in '^{key}:{value}$' format
     """
     filename = kwargs["filename"] if kwargs.get("filename") else "output.txt"
-    copyfile(filename, f'{filename}.bak')
+    # copyfile(filename, f'{filename}.bak')
     with open(filename, 'w') as file:
         for key, value in data.items():
             file.write(f'{key}:{value}\n')
 
 
 if __name__ == "__main__":
-    # Only for testing
-    # hashes = get_sample_data()
+    """
+    Usage ./cracker.py passwords_to_test_against.txt hashes_to_crack.txt
+    """
     if len(sys.argv) < 3:
         print("USAGE: python cracker.py passwords.txt hashes.txt")
         exit(1)
 
     passwords = open(sys.argv[1], 'br').readlines()
     hashes = open(sys.argv[2], 'r').readlines()
-    clean_passwords = [ passw.decode('latin-1').strip() for passw in passwords ]
+    # hashes = get_sample_data()  # Only for testing
+    clean_passwords = [passw.decode('latin-1').strip() for passw in passwords]
+    clean_hashes = [hash.strip() for hash in hashes]
 
-    find_fnv_matches(clean_passwords, hashes)
+    find_fnv_matches(clean_passwords, clean_hashes)
 
     print("Done processing")
